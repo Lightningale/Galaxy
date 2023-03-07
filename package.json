@@ -1,0 +1,19 @@
+{
+  "name": "glsl-project",
+  "version": "1.0.0",
+  "author": "Geyang Liu <gyl.lakewood@gmail.com>",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "postinstall": "npm run start",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "glsl-canvas-js": "0.2.8",
+    "stats.js": "0.17.0"
+  },
+  "devDependencies": {
+    "electron": "19.0.0",
+    "sirv-cli": "1.0.11"
+  }
+}
