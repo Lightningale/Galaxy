@@ -1444,7 +1444,7 @@ var GlslCanvas = function () {
 
         var sandbox = this;
         function RenderLoop() {
-            if (sandbox.nMouse > 1) {
+            if (sandbox.nMouse > 1||sandbox.vMouse > 1) {
                 sandbox.setMouse(mouse);
             }
 
@@ -1528,11 +1528,11 @@ var GlslCanvas = function () {
             //MOdded
             this.nTime = (this.fragmentString.match(/u_time/g) || []).length;
             this.nMouse = (this.fragmentString.match(/u_mouse/g) || []).length;
-            //this.nTime = (this.vertexString.match(/u_time/g) || []).length;
-            //this.nMouse = (this.vertexString.match(/u_mouse/g) || []).length;
+            this.vTime = (this.vertexString.match(/u_time/g) || []).length;
+            this.vMouse = (this.vertexString.match(/u_mouse/g) || []).length;
             this.nDate = (this.fragmentString.match(/u_date/g) || []).length;
             
-            this.animated = this.nDate > 1 || this.nTime > 1 || this.nMouse > 1;
+            this.animated = this.nDate > 1 || this.nTime > 1 || this.nMouse > 1||this.vTime > 1 || this.vMouse > 1;
 
             var nTextures = this.fragmentString.search(/sampler2D/g);
             if (nTextures) {
@@ -1821,7 +1821,7 @@ var GlslCanvas = function () {
                     this.uniform('1f', 'float', 'u_delta', this.timeDelta);
                 }
 
-                if (this.nTime > 1) {
+                if (this.nTime > 1||this.vTime > 1) {
                     // set the elapsed time uniform
                     this.uniform('1f', 'float', 'u_time', (now - this.timeLoad) / 1000.0);
                 }

@@ -11,9 +11,9 @@ uniform vec2 u_mouse;
 uniform vec2 u_resolution;
 
 
-float iTime = u_time;
-vec2 iResolution = u_resolution;
-vec2 iMouse = u_mouse;
+
+
+
 
 // Protean clouds by nimitz (twitter: @stormoid)
 // https://www.shadertoy.com/view/3l23Rh
@@ -51,7 +51,7 @@ vec2 map(vec3 p)
 {
     vec3 p2 = p;
     p2.xy -= disp(p.z).xy;
-    p.xy *= rot(sin(p.z+iTime)*(0.1 + prm1*0.05) + iTime*0.09);
+    p.xy *= rot(sin(p.z+u_time)*(0.1 + prm1*0.05) + u_time*0.09);
     float cl = mag2(p2.xy);
     float d = 0.;
     p *= .61;
@@ -60,7 +60,7 @@ vec2 map(vec3 p)
     float dspAmp = 0.1 + prm1*0.2;
     for(int i = 0; i < 5; i++)
     {
-		p += sin(p.zxy*0.75*trk + iTime*trk*.8)*dspAmp;
+		p += sin(p.zxy*0.75*trk + u_time*trk*.8)*dspAmp;
         d -= abs(dot(cos(p), sin(p.yzx))*z);
         z *= 0.57;
         trk *= 1.4;
@@ -126,16 +126,16 @@ vec3 iLerp(in vec3 a, in vec3 b, in float x)
     return clamp(ic,0.,1.);
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void cloud( out vec4 fragColor, in vec2 fragCoord )
 {	
-	vec2 q = fragCoord.xy/iResolution.xy;
-    vec2 p = (gl_FragCoord.xy - 0.5*iResolution.xy)/iResolution.y;
-    bsMo = (iMouse.xy - 0.5*iResolution.xy)/iResolution.y;
+	vec2 q = fragCoord.xy/u_resolution.xy;
+    vec2 p = (gl_FragCoord.xy - 0.5*u_resolution.xy)/u_resolution.y;
+    bsMo = (u_mouse.xy - 0.5*u_resolution.xy)/u_resolution.y;
     
-    float u_time = iTime*3.;
+    float u_time = u_time*2.;
     vec3 ro = vec3(0,0,u_time);
     
-    ro += vec3(sin(iTime)*0.5,sin(iTime*1.)*0.,0);
+    ro += vec3(sin(u_time)*0.5,sin(u_time*1.)*0.,0);
         
     float dspAmp = .85;
     ro.xy += disp(ro.z)*dspAmp;
@@ -148,7 +148,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     rightdir = normalize(cross(updir, target));
 	vec3 rd=normalize((p.x*rightdir + p.y*updir)*1. - target);
     rd.xy *= rot(-disp(u_time + 3.5).x*0.2 + bsMo.x);
-    prm1 = smoothstep(-0.4, 0.4,sin(iTime*0.3));
+    prm1 = smoothstep(-0.4, 0.4,sin(u_time*0.3));
 	vec4 scn = render(ro, rd, u_time);
 		
     vec3 col = scn.rgb;
@@ -163,6 +163,6 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 void main(void)
 {
-    mainImage(gl_FragColor, gl_FragCoord.xy);
+    cloud(gl_FragColor, gl_FragCoord.xy);
     gl_FragColor.a = 1.;
 }
